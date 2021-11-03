@@ -17,7 +17,6 @@ export class OpenWeatherMapsService {
 
   fetchTemperature(paramters: IParametersRequestFetchTemprerature) {
     const baseUrl = this.configService.get('OPEN_WEATHER_MAPS_BASE_URL');
-    console.log('baseUrl: ', baseUrl);
 
     const url = this.mountUrl(baseUrl, paramters);
 

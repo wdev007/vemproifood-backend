@@ -33,7 +33,6 @@ export class SpotifyService {
 
     params.append('grant_type', 'client_credentials');
 
-    console.log(params);
     return this.http
       .post<IResponseAuthenticate>(url, params, {
         headers,
