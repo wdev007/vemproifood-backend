@@ -10,7 +10,6 @@ export class WeatherPlaylistController {
 
   @Get()
   findAll(@Query() parameters: GetWeatherPlaylistDto) {
-    console.log('WeatherPlaylistController: ', parameters);
     return this.weatherPlaylistService.findAll(parameters);
   }
 }
