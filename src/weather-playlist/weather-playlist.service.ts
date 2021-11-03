@@ -16,29 +16,22 @@ export class WeatherPlaylistService {
   ) {}
 
   findAll(parameters: IParametersWeatherPlaylist) {
-    return new Promise((resolve) => {
-      this.openWeatherMapsService
-        .fetchTemperature(parameters)
-        .pipe(
-          mergeMap((temperature) =>
-            this.spotifyService.authenticate().pipe(
-              mergeMap((responseAuth) =>
-                this.spotifyService.findTracksRecommendations(
-                  {
-                    limit: 20,
-                    market: 'BR',
-                    seed_genres: this.getGenresByTemperature(temperature),
-                  },
-                  responseAuth,
-                ),
-              ),
+    return this.openWeatherMapsService.fetchTemperature(parameters).pipe(
+      mergeMap((temperature) =>
+        this.spotifyService.authenticate().pipe(
+          mergeMap((responseAuth) =>
+            this.spotifyService.findTracksRecommendations(
+              {
+                limit: 20,
+                market: 'BR',
+                seed_genres: this.getGenresByTemperature(temperature),
+              },
+              responseAuth,
             ),
           ),
-        )
-        .subscribe((response) => {
-          resolve(response);
-        });
-    });
+        ),
+      ),
+    );
   }
 
   getGenresByTemperature(tempetature: number): string {
