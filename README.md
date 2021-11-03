@@ -6,17 +6,10 @@ names is fine) suggestion according to the current temperature.
 
 ## Business rules
 
-<<<<<<< HEAD
-* If temperature (celcius) is above 30 degrees, suggest tracks for party
-* In case temperature is between 15 and 30 degrees, suggest pop music tracks
-* If it's a bit chilly (between 10 and 14 degrees), suggest rock music tracks
-* Otherwise, if it's freezing outside, suggests classical music tracks 
-=======
 - If temperature (celcius) is above 30 degrees, suggest tracks for party
 - In case temperature is between 15 and 30 degrees, suggest pop music tracks
 - If it's a bit chilly (between 10 and 14 degrees), suggest rock music tracks
 - Otherwise, if it's freezing outside, suggests classical music tracks
->>>>>>> 5490abed2b1437ec59568632aa270e0c22f954aa
 
 ## Hints
 
@@ -28,10 +21,7 @@ tracks as part of the playlist.
 - [OpenWeatherMaps API](https://home.openweathermap.org/users/sign_up) (You can use this API Key: b77e07f479efe92156376a8b07640ced)
 
 ### Sample cities
-<<<<<<< HEAD
-=======
 
->>>>>>> 5490abed2b1437ec59568632aa270e0c22f954aa
 http://api.openweathermap.org/data/2.5/weather?q=campinas&appid=b77e07f479efe92156376a8b07640ced
 http://api.openweathermap.org/data/2.5/weather?q=salvador&appid=b77e07f479efe92156376a8b07640ced
 http://api.openweathermap.org/data/2.5/weather?q=brasilia&appid=b77e07f479efe92156376a8b07640ced
