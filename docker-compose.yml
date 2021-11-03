@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  api:
+    container_name: api_weather_playlist
+    image: api_weather_playlist:1.0.0
+    build:
+      context: .
+      target: development
+      dockerfile: ./Dockerfile
+    command: npm run start:debug
+    ports:
+      - ${API_PORT}:${API_PORT}
+    networks:
+      - api-network
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    restart: unless-stopped
+    env_file:
+      - .env
+networks:
+  api-network:
