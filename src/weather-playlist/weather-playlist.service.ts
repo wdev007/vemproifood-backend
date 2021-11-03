@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { finalize, mergeMap } from 'rxjs';
+import { mergeMap } from 'rxjs';
 import { IParametersWeatherPlaylist } from './interfaces/parameters';
 import { OpenWeatherMapsService } from './services/open-weather-maps/open-weather-maps.service';
 import { SpotifyService } from './services/spotify/spotify.service';
@@ -13,28 +13,27 @@ export class WeatherPlaylistService {
 
   findAll(parameters: IParametersWeatherPlaylist) {
     return new Promise((resolve) => {
-      this.openWeatherMapsService.fetchTemperature(parameters).pipe(
-        mergeMap((temperature) =>
-          this.spotifyService.authenticate().pipe(
-            mergeMap((responseAuth) =>
-              this.spotifyService
-                .findTracksRecommendations(
+      this.openWeatherMapsService
+        .fetchTemperature(parameters)
+        .pipe(
+          mergeMap((temperature) =>
+            this.spotifyService.authenticate().pipe(
+              mergeMap((responseAuth) =>
+                this.spotifyService.findTracksRecommendations(
                   {
                     limit: 20,
                     market: 'BR',
                     seed_genres: this.getStyleByTemperature(temperature),
                   },
                   responseAuth,
-                )
-                .pipe(
-                  finalize(() => {
-                    resolve(true);
-                  }),
                 ),
+              ),
             ),
           ),
-        ),
-      );
+        )
+        .subscribe((response) => {
+          resolve(response);
+        });
     });
   }
 

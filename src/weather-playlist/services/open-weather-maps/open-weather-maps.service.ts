@@ -17,12 +17,15 @@ export class OpenWeatherMapsService {
 
   fetchTemperature(paramters: IParametersRequestFetchTemprerature) {
     const baseUrl = this.configService.get('OPEN_WEATHER_MAPS_BASE_URL');
+    console.log('baseUrl: ', baseUrl);
 
     const url = this.mountUrl(baseUrl, paramters);
 
     return this.http
       .get<IResponseFetchTemprerature>(url)
-      .pipe(map((response) => response.data.main.temp));
+      .pipe(
+        map((response) => this.converKelvinToCelsius(response.data.main.temp)),
+      );
   }
 
   mountUrl(
@@ -41,5 +44,13 @@ export class OpenWeatherMapsService {
     url += `&appid=${apiKey}`;
 
     return url;
+  }
+
+  convertFahrenheitToCelsius(fahrenheit: number): number {
+    return ((fahrenheit - 32) * 5) / 9;
+  }
+
+  converKelvinToCelsius(kelvin: number): number {
+    return kelvin - 273.15;
   }
 }

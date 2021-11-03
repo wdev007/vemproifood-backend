@@ -1,8 +1,8 @@
 import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { map } from 'rxjs';
-import qs from 'qs';
+import { catchError, map, of } from 'rxjs';
+import { URLSearchParams } from 'url';
 
 import {
   IResponseAuthenticate,
@@ -29,15 +29,22 @@ export class SpotifyService {
       ).toString('base64')}`,
     };
 
-    const body = qs.stringify({
-      grant_type: 'client_credentials',
-    });
+    const params = new URLSearchParams();
 
+    params.append('grant_type', 'client_credentials');
+
+    console.log(params);
     return this.http
-      .post<IResponseAuthenticate>(url, body, {
+      .post<IResponseAuthenticate>(url, params, {
         headers,
       })
-      .pipe(map((response) => response.data.access_token));
+      .pipe(
+        map((response) => response.data.access_token),
+        catchError((error) => {
+          console.log('error', error);
+          return of();
+        }),
+      );
   }
 
   findTracksRecommendations(
@@ -52,16 +59,21 @@ export class SpotifyService {
       Authorization: `Bearer ${accessToken}`,
     };
 
-    return this.http
-      .get<IResponseTracksRecommendations>(url, { headers })
-      .pipe(map((response) => response.data.tracks.map((track) => track.name)));
+    return this.http.get<IResponseTracksRecommendations>(url, { headers }).pipe(
+      map((response) => response.data.tracks.map((track) => track.name)),
+      catchError((error) => {
+        console.log('error: ', error);
+        return of();
+      }),
+    );
   }
 
   mountUrl(baseUrl: string, parameters: IFilterTracksRecommendations): string {
     let url = baseUrl + '?';
     for (const param in parameters) {
-      url += `${param}=${parameters[param]}`;
+      url += `${param}=${parameters[param]}&`;
     }
-    return url;
+
+    return url[url.length - 1] === '&' ? url.slice(0, -1) : url;
   }
 }
