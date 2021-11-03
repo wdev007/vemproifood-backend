@@ -1,8 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { mergeMap } from 'rxjs';
-import { IParametersWeatherPlaylist } from './interfaces/parameters';
+
 import { OpenWeatherMapsService } from './services/open-weather-maps/open-weather-maps.service';
 import { SpotifyService } from './services/spotify/spotify.service';
+
+import { Genres } from './enums/genres';
+
+import { IParametersWeatherPlaylist } from './interfaces/parameters';
 
 @Injectable()
 export class WeatherPlaylistService {
@@ -23,7 +27,7 @@ export class WeatherPlaylistService {
                   {
                     limit: 20,
                     market: 'BR',
-                    seed_genres: this.getStyleByTemperature(temperature),
+                    seed_genres: this.getGenresByTemperature(temperature),
                   },
                   responseAuth,
                 ),
@@ -37,14 +41,14 @@ export class WeatherPlaylistService {
     });
   }
 
-  getStyleByTemperature(tempetature: number): string {
+  getGenresByTemperature(tempetature: number): string {
     if (tempetature > 30) {
-      return 'party';
+      return Genres.PARTY;
     } else if (tempetature >= 15 && tempetature < 30) {
-      return 'pop';
+      return Genres.POP;
     } else if (tempetature >= 10 && tempetature <= 14) {
-      return 'rock';
+      return Genres.ROCK;
     }
-    return 'classical';
+    return Genres.CLASSICAL;
   }
 }
