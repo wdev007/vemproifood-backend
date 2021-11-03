@@ -1,0 +1,11 @@
+genres_by_temperature:
+  - name: 'party'
+    temp_min: 30
+  - name: 'pop'
+    temp_min: 15
+    temp_max: 30
+  - name: 'rock'
+    temp_min: 10
+    temp_max: 15
+  - name: 'classical'
+    temp_max: 10

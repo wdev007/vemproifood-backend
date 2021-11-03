@@ -4,15 +4,16 @@ import { mergeMap } from 'rxjs';
 import { OpenWeatherMapsService } from './services/open-weather-maps/open-weather-maps.service';
 import { SpotifyService } from './services/spotify/spotify.service';
 
-import { Genres } from './enums/genres';
-
 import { IParametersWeatherPlaylist } from './interfaces/parameters';
+import { ConfigService } from '@nestjs/config';
+import { IGenresByTemperature } from './interfaces/genres-by-temperature';
 
 @Injectable()
 export class WeatherPlaylistService {
   constructor(
     private readonly spotifyService: SpotifyService,
     private readonly openWeatherMapsService: OpenWeatherMapsService,
+    private readonly configService: ConfigService,
   ) {}
 
   findAll(parameters: IParametersWeatherPlaylist) {
@@ -35,13 +36,17 @@ export class WeatherPlaylistService {
   }
 
   getGenresByTemperature(tempetature: number): string {
-    if (tempetature > 30) {
-      return Genres.PARTY;
-    } else if (tempetature >= 15 && tempetature < 30) {
-      return Genres.POP;
-    } else if (tempetature >= 10 && tempetature <= 14) {
-      return Genres.ROCK;
-    }
-    return Genres.CLASSICAL;
+    const genresByTemperature = this.configService.get<IGenresByTemperature[]>(
+      'genres_by_temperature',
+    );
+
+    const { name } = genresByTemperature.find(
+      (item) =>
+        (tempetature > item.temp_min && !item.temp_max) ||
+        (tempetature < item.temp_max && !item.temp_min) ||
+        (tempetature >= item.temp_min && tempetature < item.temp_max),
+    );
+
+    return name;
   }
 }
