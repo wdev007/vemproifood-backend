@@ -7,6 +7,7 @@ import { SpotifyService } from './services/spotify/spotify.service';
 import { IParametersWeatherPlaylist } from './interfaces/parameters';
 import { ConfigService } from '@nestjs/config';
 import { IGenresByTemperature } from './interfaces/genres-by-temperature';
+import { Genres } from './enums/genres';
 
 @Injectable()
 export class WeatherPlaylistService {
@@ -40,13 +41,13 @@ export class WeatherPlaylistService {
       'genres_by_temperature',
     );
 
-    const { name } = genresByTemperature.find(
+    const genre = genresByTemperature.find(
       (item) =>
         (tempetature > item.temp_min && !item.temp_max) ||
         (tempetature < item.temp_max && !item.temp_min) ||
         (tempetature >= item.temp_min && tempetature < item.temp_max),
     );
 
-    return name;
+    return genre?.name || Genres.PARTY;
   }
 }
